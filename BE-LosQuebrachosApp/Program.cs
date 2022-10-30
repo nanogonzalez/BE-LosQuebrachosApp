@@ -24,7 +24,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IChoferRepository, ChoferRepository>();
-
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IVehiculoRepsitory, VehiculoRepository>();
 builder.Services.AddScoped<ITransporteRepository, TransporteRepository>();
 

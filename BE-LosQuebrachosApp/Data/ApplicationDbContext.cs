@@ -13,5 +13,7 @@ namespace BE_LosQuebrachosApp.Data
         public DbSet<Transporte> Transportes { get; set; }
         public DbSet<Chofer> Choferes { get; set; }
         public DbSet<Vehiculo> Vehiculos { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
+
     }
 }

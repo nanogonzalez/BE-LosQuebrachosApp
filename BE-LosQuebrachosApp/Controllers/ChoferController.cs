@@ -42,11 +42,20 @@ namespace BE_LosQuebrachosApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var listChoferes = await _choferRepository.GetListChoferes();
+            try
+            {
+                var listChoferes = await _choferRepository.GetListChoferes();
 
-            var listChoferesDto = _mapper.Map<IEnumerable<ChoferDto>>(listChoferes);
+                var listChoferesDto = _mapper.Map<IEnumerable<ChoferDto>>(listChoferes);
 
-            return Ok(listChoferesDto);
+                return Ok(listChoferesDto);
+            }
+            catch (Exception ex) 
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)

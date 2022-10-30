@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -24,18 +25,20 @@ namespace BE_LosQuebrachosApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Intermediarios",
+                name: "Clientes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cuit = table.Column<int>(type: "int", nullable: false),
-                    TransporteId = table.Column<int>(type: "int", nullable: false)
+                    DestinoCarga = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DestinoDescarga = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DiaCarga = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HoraCarga = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TipoMercaderia = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Intermediarios", x => x.Id);
+                    table.PrimaryKey("PK_Clientes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -46,9 +49,7 @@ namespace BE_LosQuebrachosApp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cuit = table.Column<int>(type: "int", nullable: false),
-                    ChoferId = table.Column<int>(type: "int", nullable: false),
-                    VehiculoId = table.Column<int>(type: "int", nullable: false)
+                    Cuit = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,7 +79,7 @@ namespace BE_LosQuebrachosApp.Migrations
                 name: "Choferes");
 
             migrationBuilder.DropTable(
-                name: "Intermediarios");
+                name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "Transportes");
