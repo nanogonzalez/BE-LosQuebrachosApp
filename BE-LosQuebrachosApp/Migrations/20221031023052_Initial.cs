@@ -25,7 +25,7 @@ namespace BE_LosQuebrachosApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Clientes",
+                name: "OrdenesDeCargas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -38,7 +38,7 @@ namespace BE_LosQuebrachosApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Clientes", x => x.Id);
+                    table.PrimaryKey("PK_OrdenesDeCargas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,7 +79,7 @@ namespace BE_LosQuebrachosApp.Migrations
                 name: "Choferes");
 
             migrationBuilder.DropTable(
-                name: "Clientes");
+                name: "OrdenesDeCargas");
 
             migrationBuilder.DropTable(
                 name: "Transportes");

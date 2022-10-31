@@ -46,7 +46,7 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.ToTable("Choferes");
                 });
 
-            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Cliente", b =>
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.OrdenDeCarga", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,7 +74,7 @@ namespace BE_LosQuebrachosApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clientes");
+                    b.ToTable("OrdenesDeCargas");
                 });
 
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Transporte", b =>

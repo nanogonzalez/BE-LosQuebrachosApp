@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BE_LosQuebrachosApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221030134625_Initial")]
+    [Migration("20221031023052_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,7 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.ToTable("Choferes");
                 });
 
-            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Cliente", b =>
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.OrdenDeCarga", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +76,7 @@ namespace BE_LosQuebrachosApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clientes");
+                    b.ToTable("OrdenesDeCargas");
                 });
 
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Transporte", b =>

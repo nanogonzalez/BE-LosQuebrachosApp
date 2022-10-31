@@ -1,6 +1,6 @@
 ﻿namespace BE_LosQuebrachosApp.Entities
 {
-    public class Cliente
+    public class OrdenDeCarga
     {
         public int Id { get; set; }
         public string DestinoCarga { get; set; }
