@@ -65,8 +65,8 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.Property<DateTime>("DiaCarga")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("HoraCarga")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("HoraCarga")
+                        .HasColumnType("time");
 
                     b.Property<string>("TipoMercaderia")
                         .IsRequired()

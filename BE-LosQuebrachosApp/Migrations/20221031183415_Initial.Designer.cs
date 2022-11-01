@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BE_LosQuebrachosApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221031023052_Initial")]
+    [Migration("20221031183415_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,8 +67,8 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.Property<DateTime>("DiaCarga")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("HoraCarga")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("HoraCarga")
+                        .HasColumnType("time");
 
                     b.Property<string>("TipoMercaderia")
                         .IsRequired()

@@ -33,7 +33,7 @@ namespace BE_LosQuebrachosApp.Migrations
                     DestinoCarga = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DestinoDescarga = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DiaCarga = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HoraCarga = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HoraCarga = table.Column<TimeSpan>(type: "time", nullable: false),
                     TipoMercaderia = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
