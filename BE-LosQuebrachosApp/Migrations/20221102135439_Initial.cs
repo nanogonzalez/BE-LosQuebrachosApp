@@ -32,8 +32,7 @@ namespace BE_LosQuebrachosApp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DestinoCarga = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DestinoDescarga = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DiaCarga = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HoraCarga = table.Column<TimeSpan>(type: "time", nullable: false),
+                    DiaHoraCarga = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TipoMercaderia = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>

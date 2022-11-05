@@ -43,8 +43,7 @@ namespace BE_LosQuebrachosApp.Repositories
             {
                 ordenDeCargaItem.DestinoCarga = ordenDeCarga.DestinoCarga;
                 ordenDeCargaItem.DestinoDescarga = ordenDeCarga.DestinoDescarga;
-                ordenDeCargaItem.DiaCarga = ordenDeCarga.DiaCarga;
-                ordenDeCargaItem.HoraCarga = ordenDeCarga.HoraCarga;
+                ordenDeCargaItem.DiaHoraCarga = ordenDeCarga.DiaHoraCarga; 
                 ordenDeCargaItem.TipoMercaderia = ordenDeCarga.TipoMercaderia;
 
                 await _context.SaveChangesAsync();

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BE_LosQuebrachosApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221031183415_Initial")]
+    [Migration("20221102135439_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,11 +64,8 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DiaCarga")
+                    b.Property<DateTime>("DiaHoraCarga")
                         .HasColumnType("datetime2");
-
-                    b.Property<TimeSpan>("HoraCarga")
-                        .HasColumnType("time");
 
                     b.Property<string>("TipoMercaderia")
                         .IsRequired()

@@ -62,11 +62,8 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DiaCarga")
+                    b.Property<DateTime>("DiaHoraCarga")
                         .HasColumnType("datetime2");
-
-                    b.Property<TimeSpan>("HoraCarga")
-                        .HasColumnType("time");
 
                     b.Property<string>("TipoMercaderia")
                         .IsRequired()
