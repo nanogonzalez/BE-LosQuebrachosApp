@@ -10,21 +10,6 @@ namespace BE_LosQuebrachosApp.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Choferes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cuit = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Choferes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OrdenesDeCargas",
                 columns: table => new
                 {
@@ -56,6 +41,28 @@ namespace BE_LosQuebrachosApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Choferes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cuit = table.Column<int>(type: "int", nullable: false),
+                    TransporteId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Choferes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Choferes_Transportes_TransporteId",
+                        column: x => x.TransporteId,
+                        principalTable: "Transportes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Vehiculos",
                 columns: table => new
                 {
@@ -64,12 +71,29 @@ namespace BE_LosQuebrachosApp.Migrations
                     Chasis = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Acoplado = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CapacidadTN = table.Column<int>(type: "int", nullable: false)
+                    CapacidadTN = table.Column<int>(type: "int", nullable: false),
+                    TransporteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vehiculos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Vehiculos_Transportes_TransporteId",
+                        column: x => x.TransporteId,
+                        principalTable: "Transportes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Choferes_TransporteId",
+                table: "Choferes",
+                column: "TransporteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehiculos_TransporteId",
+                table: "Vehiculos",
+                column: "TransporteId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -81,10 +105,10 @@ namespace BE_LosQuebrachosApp.Migrations
                 name: "OrdenesDeCargas");
 
             migrationBuilder.DropTable(
-                name: "Transportes");
+                name: "Vehiculos");
 
             migrationBuilder.DropTable(
-                name: "Vehiculos");
+                name: "Transportes");
         }
     }
 }

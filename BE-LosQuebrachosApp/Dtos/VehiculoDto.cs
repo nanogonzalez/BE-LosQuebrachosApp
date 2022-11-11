@@ -1,4 +1,6 @@
-﻿namespace BE_LosQuebrachosApp.Dtos
+﻿using BE_LosQuebrachosApp.Entities;
+
+namespace BE_LosQuebrachosApp.Dtos
 {
     public class VehiculoDto
     {
@@ -7,5 +9,7 @@
         public string Acoplado { get; set; }
         public string Tipo { get; set; }
         public int CapacidadTN { get; set; }
+      
+
     }
 }

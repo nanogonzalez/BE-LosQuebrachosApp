@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BE_LosQuebrachosApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221102135439_Initial")]
-    partial class Initial
+    [Migration("20221109192003_v3")]
+    partial class v3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,7 +43,12 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TransporteId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TransporteId");
 
                     b.ToTable("Choferes");
                 });
@@ -88,8 +93,8 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Cuit")
-                        .HasColumnType("int");
+                    b.Property<long>("Cuit")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -123,9 +128,36 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TransporteId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("TransporteId");
+
                     b.ToTable("Vehiculos");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Chofer", b =>
+                {
+                    b.HasOne("BE_LosQuebrachosApp.Entities.Transporte", "Transporte")
+                        .WithMany()
+                        .HasForeignKey("TransporteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transporte");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Vehiculo", b =>
+                {
+                    b.HasOne("BE_LosQuebrachosApp.Entities.Transporte", "Transporte")
+                        .WithMany()
+                        .HasForeignKey("TransporteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transporte");
                 });
 #pragma warning restore 612, 618
         }
