@@ -1,5 +1,9 @@
 ﻿using BE_LosQuebrachosApp.Data;
 using BE_LosQuebrachosApp.Entities;
+using BE_LosQuebrachosApp.Filter;
+using BE_LosQuebrachosApp.Helpers;
+using BE_LosQuebrachosApp.Services;
+using BE_LosQuebrachosApp.Wrappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BE_LosQuebrachosApp.Repositories
@@ -7,9 +11,11 @@ namespace BE_LosQuebrachosApp.Repositories
     public class OrdenDeCargaRepository: IOrdenDeCargaRepository
     {
         private readonly ApplicationDbContext _context;
-        public OrdenDeCargaRepository(ApplicationDbContext context)
+        private readonly IUriService uriService;
+        public OrdenDeCargaRepository(ApplicationDbContext context, IUriService uriService)
         {
             _context = context;
+            this.uriService = uriService;
         }
 
         public async Task<OrdenDeCarga> AddOrdenDeCarga(OrdenDeCarga ordenDeCarga)
@@ -19,14 +25,21 @@ namespace BE_LosQuebrachosApp.Repositories
             return ordenDeCarga;
         }
 
-        public async Task<List<OrdenDeCarga>> GetListOrdenDeCarga()
+        public async Task<PagedResponse<List<OrdenDeCarga>>> GetListOrdenDeCarga(PaginationFilter filter, string route)
         {
-            return await _context.OrdenesDeCargas.ToListAsync();
+
+            var pagedData = await _context.OrdenesDeCargas
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+            var totalRecords = await _context.OrdenesDeCargas.CountAsync();
+            var pagedReponse = PaginationHelper.CreatePagedReponse(pagedData, filter, totalRecords, uriService, route);
+            return pagedReponse;
         }
 
         public async Task<OrdenDeCarga> GetOrdenDeCarga(int id)
         {
-            return await _context.OrdenesDeCargas.FindAsync(id);
+            return await _context.OrdenesDeCargas.Where(a => a.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task DeleteOrdenDeCarga(OrdenDeCarga ordenDeCarga)

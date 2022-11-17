@@ -7,7 +7,7 @@
         public string Acoplado { get; set; }
         public string Tipo { get; set; }
         public int CapacidadTN { get; set; }
-       
-       
+        public Transporte Transporte { get; set; }
+    
     }
 }

@@ -41,7 +41,12 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TransporteId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TransporteId");
 
                     b.ToTable("Choferes");
                 });
@@ -121,9 +126,36 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TransporteId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("TransporteId");
+
                     b.ToTable("Vehiculos");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Chofer", b =>
+                {
+                    b.HasOne("BE_LosQuebrachosApp.Entities.Transporte", "Transporte")
+                        .WithMany()
+                        .HasForeignKey("TransporteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transporte");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Vehiculo", b =>
+                {
+                    b.HasOne("BE_LosQuebrachosApp.Entities.Transporte", "Transporte")
+                        .WithMany()
+                        .HasForeignKey("TransporteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transporte");
                 });
 #pragma warning restore 612, 618
         }

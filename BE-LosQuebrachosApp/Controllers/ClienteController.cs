@@ -11,28 +11,28 @@ namespace BE_LosQuebrachosApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransporteController : ControllerBase
+    public class ClienteController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ITransporteRepository _transporteRepository;
+        private readonly IClienteRepository _clienteRepository;
 
-        public TransporteController(IMapper mapper, ITransporteRepository transporteRepository)
+        public ClienteController(IMapper mapper, IClienteRepository clienteRepository)
         {
             _mapper = mapper;
-            _transporteRepository = transporteRepository;
+            _clienteRepository = clienteRepository;
         }
         [HttpPost]
-        public async Task<IActionResult> Post(TransporteDto transporteDto)
+        public async Task<IActionResult> Post(ClienteDto clienteDto)
         {
             try
             {
-                var transporte = _mapper.Map<Transporte>(transporteDto);
+                var cliente = _mapper.Map<Cliente>(clienteDto);
 
-                transporte = await _transporteRepository.AddTransporte(transporte);
+                cliente = await _clienteRepository.AddCliente(cliente);
 
-                var transporteItemDto = _mapper.Map<TransporteDto>(transporte);
+                var clienteItemDto = _mapper.Map<ClienteDto>(clienteDto);
 
-                return CreatedAtAction("Get", new { id = transporteItemDto.Id }, transporteItemDto);
+                return CreatedAtAction("Get", new { id = clienteItemDto.Id }, clienteItemDto);
             }
             catch (Exception ex)
             {
@@ -45,17 +45,17 @@ namespace BE_LosQuebrachosApp.Controllers
         {
             try
             {
-                if(filter?.PageSize > 20)
+                if (filter?.PageSize > 20)
                 {
                     filter.PageSize = 20;
                 }
 
                 var route = Request.Path.Value;
-                var listTransporte = await _transporteRepository.GetListTransportes(filter, route);
+                var listCliente = await _clienteRepository.GetListCliente(filter, route);
 
-                var listTransporteDto = _mapper.Map<IEnumerable<TransporteDto>>(listTransporte);
+                var listClienteDto = _mapper.Map<IEnumerable<ClienteDto>>(listCliente);
 
-                return Ok(listTransporteDto);
+                return Ok(listClienteDto);
             }
             catch (Exception ex)
             {
@@ -68,34 +68,33 @@ namespace BE_LosQuebrachosApp.Controllers
         {
             try
             {
-                var transporte = await _transporteRepository.GetTransporte(id);
+                var cliente = await _clienteRepository.GetCliente(id);
 
-                if (transporte == null)
+                if (cliente == null)
                 {
                     return NotFound();
                 }
-                var transporteDto = _mapper.Map<TransporteDto>(transporte);
+                var clienteDto = _mapper.Map<ClienteDto>(cliente);
 
-                return Ok(new Response<TransporteDto>(transporteDto));
+                return Ok(new Response<ClienteDto>(clienteDto));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var transporte = await _transporteRepository.GetTransporte(id);
+                var cliente = await _clienteRepository.GetCliente(id);
 
-                if (transporte == null)
+                if (cliente == null)
                 {
                     return NotFound();
                 }
-                await _transporteRepository.DeleteTransporte(transporte);
+                await _clienteRepository.DeleteCliente(cliente);
 
                 return NoContent();
             }
@@ -106,25 +105,25 @@ namespace BE_LosQuebrachosApp.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, TransporteDto transporteDto)
+        public async Task<IActionResult> Put(int id, ClienteDto clienteDto)
         {
             try
             {
-                var transporte = _mapper.Map<Transporte>(transporteDto);
+                var cliente = _mapper.Map<Cliente>(clienteDto);
 
-                if (id != transporte.Id)
+                if (id != cliente.Id)
                 {
                     return BadRequest();
                 }
 
-                var transporteItem = await _transporteRepository.GetTransporte(id);
+                var clienteItem = await _clienteRepository.GetCliente(id);
 
-                if (transporteItem == null)
+                if (clienteItem == null)
                 {
                     return NotFound();
                 }
 
-                await _transporteRepository.UpdateTransporte(transporte);
+                await _clienteRepository.UpdateCliente(cliente);
 
                 return NoContent();
             }
@@ -136,4 +135,3 @@ namespace BE_LosQuebrachosApp.Controllers
         }
     }
 }
-

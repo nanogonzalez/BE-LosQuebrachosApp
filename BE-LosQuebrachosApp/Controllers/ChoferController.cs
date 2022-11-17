@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BE_LosQuebrachosApp.Dtos;
 using BE_LosQuebrachosApp.Entities;
+using BE_LosQuebrachosApp.Filter;
 using BE_LosQuebrachosApp.Repositories;
+using BE_LosQuebrachosApp.Wrappers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,11 +42,17 @@ namespace BE_LosQuebrachosApp.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] PaginationFilter filter)
         {
             try
             {
-                var listChoferes = await _choferRepository.GetListChoferes();
+                if (filter?.PageSize > 20)
+                {
+                    filter.PageSize = 20;
+                }
+
+                var route = Request.Path.Value;
+                var listChoferes = await _choferRepository.GetListChoferes(filter, route);
 
                 var listChoferesDto = _mapper.Map<IEnumerable<ChoferDto>>(listChoferes);
 
@@ -70,7 +78,7 @@ namespace BE_LosQuebrachosApp.Controllers
                 }
                 var choferDto = _mapper.Map<ChoferDto>(chofer);
 
-                return Ok(choferDto);
+                return Ok( new Response<ChoferDto>(choferDto));
             }
             catch (Exception ex)
             {

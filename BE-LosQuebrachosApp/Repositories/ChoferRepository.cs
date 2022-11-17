@@ -1,5 +1,9 @@
 ﻿using BE_LosQuebrachosApp.Data;
 using BE_LosQuebrachosApp.Entities;
+using BE_LosQuebrachosApp.Filter;
+using BE_LosQuebrachosApp.Helpers;
+using BE_LosQuebrachosApp.Services;
+using BE_LosQuebrachosApp.Wrappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BE_LosQuebrachosApp.Repositories
@@ -7,9 +11,11 @@ namespace BE_LosQuebrachosApp.Repositories
     public class ChoferRepository: IChoferRepository
     {
         private readonly ApplicationDbContext _context;
-        public ChoferRepository(ApplicationDbContext context)
+        private readonly IUriService uriService;
+        public ChoferRepository(ApplicationDbContext context, IUriService uriService)
         {
             _context = context;
+            this.uriService = uriService;
         }
 
         public async Task<Chofer> AddChofer(Chofer chofer)
@@ -25,14 +31,21 @@ namespace BE_LosQuebrachosApp.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Chofer>> GetListChoferes()
+        public async Task<PagedResponse<List<Chofer>>> GetListChoferes(PaginationFilter filter, string route)
         {
-            return await _context.Choferes.ToListAsync();
+            
+            var pagedData = await _context.Choferes
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+            var totalRecords = await _context.Choferes.CountAsync();
+            var pagedReponse = PaginationHelper.CreatePagedReponse(pagedData, filter, totalRecords, uriService, route);
+            return pagedReponse;
         }
 
         public async Task<Chofer> GetChofer(int id)
         {
-            return await _context.Choferes.FindAsync(id);
+            return await _context.Choferes.Where(a => a.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task UpdateChofer(Chofer chofer)

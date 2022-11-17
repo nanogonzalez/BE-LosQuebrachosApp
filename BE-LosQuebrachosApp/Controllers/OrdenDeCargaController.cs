@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BE_LosQuebrachosApp.Dtos;
 using BE_LosQuebrachosApp.Entities;
+using BE_LosQuebrachosApp.Filter;
 using BE_LosQuebrachosApp.Repositories;
+using BE_LosQuebrachosApp.Wrappers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,11 +41,17 @@ namespace BE_LosQuebrachosApp.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] PaginationFilter filter)
         {
             try
             {
-                var listOrdenDeCarga = await _ordenDeCargaRepository.GetListOrdenDeCarga();
+                if (filter?.PageSize > 20)
+                {
+                    filter.PageSize = 20;
+                }
+
+                var route = Request.Path.Value;
+                var listOrdenDeCarga = await _ordenDeCargaRepository.GetListOrdenDeCarga(filter, route);
 
                 var listOrdenDeCargaDto = _mapper.Map<IEnumerable<OrdenDeCargaDto>>(listOrdenDeCarga);
 
@@ -68,7 +76,7 @@ namespace BE_LosQuebrachosApp.Controllers
                 }
                 var ordenDeCargaDto = _mapper.Map<OrdenDeCargaDto>(ordenDeCarga);
 
-                return Ok(ordenDeCargaDto);
+                return Ok(new Response<OrdenDeCargaDto>(ordenDeCargaDto));
             }
             catch (Exception ex)
             {

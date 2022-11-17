@@ -1,5 +1,9 @@
 ﻿using BE_LosQuebrachosApp.Data;
 using BE_LosQuebrachosApp.Entities;
+using BE_LosQuebrachosApp.Filter;
+using BE_LosQuebrachosApp.Helpers;
+using BE_LosQuebrachosApp.Services;
+using BE_LosQuebrachosApp.Wrappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BE_LosQuebrachosApp.Repositories
@@ -7,10 +11,12 @@ namespace BE_LosQuebrachosApp.Repositories
     public class VehiculoRepository: IVehiculoRepsitory
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUriService uriService;
 
-        public VehiculoRepository(ApplicationDbContext context)
+        public VehiculoRepository(ApplicationDbContext context, IUriService uriService)
         {
             _context = context;
+            this.uriService = uriService;
         }
         public async Task DeleteVehiculo(Vehiculo vehiculo)
         {
@@ -23,13 +29,20 @@ namespace BE_LosQuebrachosApp.Repositories
             await _context.SaveChangesAsync();
             return vehiculo;
         }
-        public async Task<List<Vehiculo>> GetListVehiculos()
+        public async Task<PagedResponse<List<Vehiculo>>> GetListVehiculos(PaginationFilter filter, string route)
         {
-            return await _context.Vehiculos.ToListAsync();
+            
+            var pagedData = await _context.Vehiculos
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+            var totalRecords = await _context.Vehiculos.CountAsync();
+            var pagedReponse = PaginationHelper.CreatePagedReponse(pagedData, filter, totalRecords, uriService, route);
+            return pagedReponse;
         }
         public async Task<Vehiculo> GetVehiculo(int id)
         {
-            return await _context.Vehiculos.FindAsync(id);
+            return await _context.Vehiculos.Where(a => a.Id == id).FirstOrDefaultAsync();
         }
         public async Task UpdateVehiculo(Vehiculo vehiculo )
         {

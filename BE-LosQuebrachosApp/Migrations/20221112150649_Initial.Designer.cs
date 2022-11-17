@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BE_LosQuebrachosApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221109192003_v3")]
-    partial class v3
+    [Migration("20221112150649_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,8 +36,8 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Cuit")
-                        .HasColumnType("int");
+                    b.Property<long>("Cuit")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
