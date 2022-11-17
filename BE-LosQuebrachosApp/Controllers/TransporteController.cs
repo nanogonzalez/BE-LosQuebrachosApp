@@ -53,7 +53,7 @@ namespace BE_LosQuebrachosApp.Controllers
                 var route = Request.Path.Value;
                 var listTransporte = await _transporteRepository.GetListTransportes(filter, route);
 
-                var listTransporteDto = _mapper.Map<IEnumerable<TransporteDto>>(listTransporte);
+                var listTransporteDto = _mapper.Map<List<TransporteDto>>(listTransporte);
 
                 return Ok(listTransporteDto);
             }
