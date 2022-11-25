@@ -51,11 +51,9 @@ namespace BE_LosQuebrachosApp.Controllers
                 }
 
                 var route = Request.Path.Value;
-                var listOrdenDeCarga = await _ordenDeCargaRepository.GetListOrdenDeCarga(filter, route);
+                var pagedResponse = await _ordenDeCargaRepository.GetListOrdenDeCarga(filter, route);
 
-                var listOrdenDeCargaDto = _mapper.Map<IEnumerable<OrdenDeCargaDto>>(listOrdenDeCarga);
-
-                return Ok(listOrdenDeCargaDto);
+                return Ok(pagedResponse);
             }
             catch (Exception ex)
             {

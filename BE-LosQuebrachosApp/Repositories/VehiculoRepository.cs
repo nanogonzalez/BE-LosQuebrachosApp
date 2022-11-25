@@ -1,4 +1,6 @@
-﻿using BE_LosQuebrachosApp.Data;
+﻿using AutoMapper;
+using BE_LosQuebrachosApp.Data;
+using BE_LosQuebrachosApp.Dtos;
 using BE_LosQuebrachosApp.Entities;
 using BE_LosQuebrachosApp.Filter;
 using BE_LosQuebrachosApp.Helpers;
@@ -11,12 +13,14 @@ namespace BE_LosQuebrachosApp.Repositories
     public class VehiculoRepository: IVehiculoRepsitory
     {
         private readonly ApplicationDbContext _context;
-        private readonly IUriService uriService;
+        private readonly IUriService _uriService;
+        private readonly IMapper mapper;
 
-        public VehiculoRepository(ApplicationDbContext context, IUriService uriService)
+        public VehiculoRepository(ApplicationDbContext context, IUriService uriService, IMapper mapper)
         {
             _context = context;
-            this.uriService = uriService;
+            _uriService = uriService;
+            this.mapper = mapper;
         }
         public async Task DeleteVehiculo(Vehiculo vehiculo)
         {
@@ -25,20 +29,24 @@ namespace BE_LosQuebrachosApp.Repositories
         }
         public async Task<Vehiculo> AddVehiculo(Vehiculo vehiculo)
         {
+            vehiculo.Transporte = await _context.Transportes.FirstOrDefaultAsync(x => x.Id == vehiculo.Transporte.Id);
             _context.Vehiculos.Add(vehiculo);
             await _context.SaveChangesAsync();
             return vehiculo;
         }
-        public async Task<PagedResponse<List<Vehiculo>>> GetListVehiculos(PaginationFilter filter, string route)
+        public async Task<PagedResponse<IList<VehiculoDto>>> GetListVehiculos(PaginationFilter filter, string route)
         {
             
-            var pagedData = await _context.Vehiculos
+            var vehiculos = await _context.Vehiculos
+                .Include(vehiculos => vehiculos.Transporte)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
+
+            var vehiculosDto = mapper.Map<IList<VehiculoDto>>(vehiculos);
             var totalRecords = await _context.Vehiculos.CountAsync();
-            var pagedReponse = PaginationHelper.CreatePagedReponse(pagedData, filter, totalRecords, uriService, route);
-            return pagedReponse;
+            var pagedResponse = PaginationHelper.CreatePagedReponse(vehiculosDto, filter, totalRecords, _uriService, route);
+            return pagedResponse;
         }
         public async Task<Vehiculo> GetVehiculo(int id)
         {

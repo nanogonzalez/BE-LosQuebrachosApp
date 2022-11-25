@@ -1,4 +1,6 @@
-﻿using BE_LosQuebrachosApp.Data;
+﻿using AutoMapper;
+using BE_LosQuebrachosApp.Data;
+using BE_LosQuebrachosApp.Dtos;
 using BE_LosQuebrachosApp.Entities;
 using BE_LosQuebrachosApp.Filter;
 using BE_LosQuebrachosApp.Helpers;
@@ -11,11 +13,13 @@ namespace BE_LosQuebrachosApp.Repositories
     public class ClienteRepository: IClienteRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly IUriService uriService;
-        public ClienteRepository(ApplicationDbContext context, IUriService uriService)
+        private readonly IUriService _uriService;
+        private readonly IMapper mapper;
+        public ClienteRepository(ApplicationDbContext context, IUriService uriService, IMapper mapper)
         {
             _context = context;
-            this.uriService = uriService;
+            _uriService = uriService;
+            this.mapper = mapper;
         }
 
         public async Task<Cliente> AddCliente(Cliente cliente)
@@ -25,16 +29,18 @@ namespace BE_LosQuebrachosApp.Repositories
             return cliente;
         }
 
-        public async Task<PagedResponse<List<Cliente>>> GetListCliente(PaginationFilter filter, string route)
+        public async Task<PagedResponse<IList<ClienteDto>>> GetListCliente(PaginationFilter filter, string route)
         {
             
-            var pagedData = await _context.Clientes
+            var clientes = await _context.Clientes
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
+
+            var clientesDto = mapper.Map<IList<ClienteDto>>(clientes);
             var totalRecords = await _context.Clientes.CountAsync();
-            var pagedReponse = PaginationHelper.CreatePagedReponse(pagedData, filter, totalRecords, uriService, route);
-            return pagedReponse;
+            var pagedResponse = PaginationHelper.CreatePagedReponse(clientesDto, filter, totalRecords, _uriService, route);
+            return pagedResponse;
         }
 
         public async Task<Cliente> GetCliente(int id)

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BE_LosQuebrachosApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221112150649_Initial")]
+    [Migration("20221118115426_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,30 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.HasIndex("TransporteId");
 
                     b.ToTable("Choferes");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Cliente", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<long>("Cuit")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("DestinoCarga")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RazonSocial")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.OrdenDeCarga", b =>

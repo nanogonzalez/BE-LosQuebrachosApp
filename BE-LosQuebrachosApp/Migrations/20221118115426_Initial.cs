@@ -10,6 +10,21 @@ namespace BE_LosQuebrachosApp.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Clientes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RazonSocial = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cuit = table.Column<long>(type: "bigint", nullable: false),
+                    DestinoCarga = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clientes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrdenesDeCargas",
                 columns: table => new
                 {
@@ -100,6 +115,9 @@ namespace BE_LosQuebrachosApp.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Choferes");
+
+            migrationBuilder.DropTable(
+                name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "OrdenesDeCargas");

@@ -1,4 +1,6 @@
-﻿using BE_LosQuebrachosApp.Data;
+﻿using AutoMapper;
+using BE_LosQuebrachosApp.Data;
+using BE_LosQuebrachosApp.Dtos;
 using BE_LosQuebrachosApp.Entities;
 using BE_LosQuebrachosApp.Filter;
 using BE_LosQuebrachosApp.Helpers;
@@ -11,11 +13,13 @@ namespace BE_LosQuebrachosApp.Repositories
     public class OrdenDeCargaRepository: IOrdenDeCargaRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly IUriService uriService;
-        public OrdenDeCargaRepository(ApplicationDbContext context, IUriService uriService)
+        private readonly IUriService _uriService;
+        private readonly IMapper mapper;
+        public OrdenDeCargaRepository(ApplicationDbContext context, IUriService uriService, IMapper mapper)
         {
             _context = context;
-            this.uriService = uriService;
+            _uriService = uriService;
+            this.mapper = mapper;
         }
 
         public async Task<OrdenDeCarga> AddOrdenDeCarga(OrdenDeCarga ordenDeCarga)
@@ -25,16 +29,18 @@ namespace BE_LosQuebrachosApp.Repositories
             return ordenDeCarga;
         }
 
-        public async Task<PagedResponse<List<OrdenDeCarga>>> GetListOrdenDeCarga(PaginationFilter filter, string route)
+        public async Task<PagedResponse<IList<OrdenDeCargaDto>>> GetListOrdenDeCarga(PaginationFilter filter, string route)
         {
 
-            var pagedData = await _context.OrdenesDeCargas
+            var ordenesDeCargas = await _context.OrdenesDeCargas
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
+
+            var ordenesDeCargasDto = mapper.Map<IList<OrdenDeCargaDto>>(ordenesDeCargas);
             var totalRecords = await _context.OrdenesDeCargas.CountAsync();
-            var pagedReponse = PaginationHelper.CreatePagedReponse(pagedData, filter, totalRecords, uriService, route);
-            return pagedReponse;
+            var pagedResponse = PaginationHelper.CreatePagedReponse(ordenesDeCargasDto, filter, totalRecords, _uriService, route);
+            return pagedResponse;
         }
 
         public async Task<OrdenDeCarga> GetOrdenDeCarga(int id)

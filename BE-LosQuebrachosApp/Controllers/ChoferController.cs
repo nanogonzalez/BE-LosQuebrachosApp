@@ -52,11 +52,9 @@ namespace BE_LosQuebrachosApp.Controllers
                 }
 
                 var route = Request.Path.Value;
-                var listChoferes = await _choferRepository.GetListChoferes(filter, route);
+                var pagedResponse = await _choferRepository.GetListChoferes(filter, route);
 
-                var listChoferesDto = _mapper.Map<IEnumerable<ChoferDto>>(listChoferes);
-
-                return Ok(listChoferesDto);
+                return Ok(pagedResponse);
             }
             catch (Exception ex) 
             {

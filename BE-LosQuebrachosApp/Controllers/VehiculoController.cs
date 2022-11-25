@@ -52,11 +52,9 @@ namespace BE_LosQuebrachosApp.Controllers
                 }
 
                 var route = Request.Path.Value;
-                var listVehiculo = await _vehiculoRepsitory.GetListVehiculos(filter, route);
+                var pagedResponse = await _vehiculoRepsitory.GetListVehiculos(filter, route);
 
-                var listVehiculoDto = _mapper.Map<IEnumerable<VehiculoDto>>(listVehiculo);
-
-                return Ok(listVehiculoDto);
+                return Ok(pagedResponse);
             }
             catch (Exception ex)
             {

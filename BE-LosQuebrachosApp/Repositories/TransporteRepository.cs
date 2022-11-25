@@ -1,4 +1,6 @@
-﻿using BE_LosQuebrachosApp.Data;
+﻿using AutoMapper;
+using BE_LosQuebrachosApp.Data;
+using BE_LosQuebrachosApp.Dtos;
 using BE_LosQuebrachosApp.Entities;
 using BE_LosQuebrachosApp.Filter;
 using BE_LosQuebrachosApp.Helpers;
@@ -12,12 +14,14 @@ namespace BE_LosQuebrachosApp.Repositories
     public class TransporteRepository: ITransporteRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly IUriService uriService;
+        private readonly IUriService _uriService;
+        private readonly IMapper mapper;
 
-        public TransporteRepository(ApplicationDbContext context, IUriService uriService)
+        public TransporteRepository(ApplicationDbContext context, IUriService uriService, IMapper mapper)
         {
             _context = context;
-            this.uriService = uriService;
+            _uriService = uriService;
+            this.mapper = mapper;
         }
         
         public async Task<Transporte> AddTransporte(Transporte transporte)
@@ -33,16 +37,18 @@ namespace BE_LosQuebrachosApp.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PagedResponse<List<Transporte>>> GetListTransportes(PaginationFilter filter, string route)
+        public async Task<PagedResponse<IList<TransporteDto>>> GetListTransportes(PaginationFilter filter, string route)
         {
-            var pagedData = await _context.Transportes
+            var transportes = await _context.Transportes
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
 
+            var transportesDto = mapper.Map<IList<TransporteDto>>(transportes);
+
             var totalRecords = await _context.Transportes.CountAsync();
-            var pagedReponse = PaginationHelper.CreatePagedReponse(pagedData, filter, totalRecords, uriService, route);
-            return pagedReponse;
+            var pagedResponse = PaginationHelper.CreatePagedReponse(transportesDto, filter, totalRecords, _uriService, route);
+            return pagedResponse;
         }
 
         public async Task<Transporte> GetTransporte(int id)

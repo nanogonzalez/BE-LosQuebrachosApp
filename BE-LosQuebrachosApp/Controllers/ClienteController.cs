@@ -51,11 +51,9 @@ namespace BE_LosQuebrachosApp.Controllers
                 }
 
                 var route = Request.Path.Value;
-                var listCliente = await _clienteRepository.GetListCliente(filter, route);
+                var pagedResponse = await _clienteRepository.GetListCliente(filter, route);
 
-                var listClienteDto = _mapper.Map<IEnumerable<ClienteDto>>(listCliente);
-
-                return Ok(listClienteDto);
+                return Ok(pagedResponse);
             }
             catch (Exception ex)
             {

@@ -8,7 +8,7 @@ namespace BE_LosQuebrachosApp.Dtos
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public long Cuit { get; set; }
-       
+        public Transporte Transporte { get; set; }
 
     }
 }
