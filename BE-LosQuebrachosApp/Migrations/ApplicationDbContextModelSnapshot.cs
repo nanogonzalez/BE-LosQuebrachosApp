@@ -103,6 +103,40 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.ToTable("OrdenesDeCargas");
                 });
 
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.OrdenDeGasoil", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CuitTransporte")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Estacion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Litros")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumeroOrden")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TransporteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransporteId");
+
+                    b.ToTable("OrdenesDeGasoil");
+                });
+
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Transporte", b =>
                 {
                     b.Property<int>("Id")
@@ -161,6 +195,17 @@ namespace BE_LosQuebrachosApp.Migrations
                 });
 
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Chofer", b =>
+                {
+                    b.HasOne("BE_LosQuebrachosApp.Entities.Transporte", "Transporte")
+                        .WithMany()
+                        .HasForeignKey("TransporteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transporte");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.OrdenDeGasoil", b =>
                 {
                     b.HasOne("BE_LosQuebrachosApp.Entities.Transporte", "Transporte")
                         .WithMany()

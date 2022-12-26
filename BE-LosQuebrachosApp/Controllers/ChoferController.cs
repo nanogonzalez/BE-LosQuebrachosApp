@@ -6,6 +6,7 @@ using BE_LosQuebrachosApp.Repositories;
 using BE_LosQuebrachosApp.Wrappers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace BE_LosQuebrachosApp.Controllers
 {
@@ -42,10 +43,12 @@ namespace BE_LosQuebrachosApp.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] PaginationFilter filter)
+        public async Task<IActionResult> Get([FromQuery] int pageNumber = 0, [FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] string? sortOrder = "asc")
         {
             try
             {
+                var filter = new PaginationFilter(pageNumber, pageSize, search, sortOrder);
+
                 if (filter?.PageSize > 20)
                 {
                     filter.PageSize = 20;

@@ -31,14 +31,34 @@ namespace BE_LosQuebrachosApp.Repositories
 
         public async Task<PagedResponse<IList<OrdenDeCargaDto>>> GetListOrdenDeCarga(PaginationFilter filter, string route)
         {
+            IList<OrdenDeCargaDto> ordenesDeCargasDto = null;
 
-            var ordenesDeCargas = await _context.OrdenesDeCargas
-                .Skip((filter.PageNumber - 1) * filter.PageSize)
-                .Take(filter.PageSize)
-                .ToListAsync();
+            int totalRecords = 0;
 
-            var ordenesDeCargasDto = mapper.Map<IList<OrdenDeCargaDto>>(ordenesDeCargas);
-            var totalRecords = await _context.OrdenesDeCargas.CountAsync();
+            if (string.IsNullOrEmpty(filter.Search)){
+
+                var ordenesDeCargas = await _context.OrdenesDeCargas
+                  .OrderBy(ordenesDeCargas => ordenesDeCargas.DestinoCarga)
+                  .Skip((filter.PageNumber - 1) * filter.PageSize)
+                  .Take(filter.PageSize)
+                  .ToListAsync();
+
+                ordenesDeCargasDto = mapper.Map<IList<OrdenDeCargaDto>>(ordenesDeCargas);
+                totalRecords = await _context.OrdenesDeCargas.CountAsync();
+            }
+            else
+            {
+                var ordenesDeCargas = await _context.OrdenesDeCargas
+                  .Where(ordenesDeCargas => EF.Functions.Like(ordenesDeCargas.DestinoCarga, $"{filter.Search}%"))
+                  .OrderBy(ordenesDeCargas => ordenesDeCargas.DestinoCarga)
+                  .Skip((filter.PageNumber - 1) * filter.PageSize)
+                  .Take(filter.PageSize)
+                  .ToListAsync();
+
+                ordenesDeCargasDto = mapper.Map<IList<OrdenDeCargaDto>>(ordenesDeCargas);
+                totalRecords = await _context.OrdenesDeCargas.Where(ordenesDeCargas => EF.Functions.Like(ordenesDeCargas.DestinoCarga, $"{filter.Search}%")).CountAsync();
+            }
+                
             var pagedResponse = PaginationHelper.CreatePagedReponse(ordenesDeCargasDto, filter, totalRecords, _uriService, route);
             return pagedResponse;
         }

@@ -8,6 +8,7 @@ using BE_LosQuebrachosApp.Services;
 using BE_LosQuebrachosApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace BE_LosQuebrachosApp.Repositories
 {
@@ -39,16 +40,41 @@ namespace BE_LosQuebrachosApp.Repositories
 
         public async Task<PagedResponse<IList<TransporteDto>>> GetListTransportes(PaginationFilter filter, string route)
         {
-            var transportes = await _context.Transportes
-                .Skip((filter.PageNumber - 1) * filter.PageSize)
-                .Take(filter.PageSize)
-                .ToListAsync();
+            IList<TransporteDto> transportesDto = null;
 
-            var transportesDto = mapper.Map<IList<TransporteDto>>(transportes);
+            int totalRecords = 0;
 
-            var totalRecords = await _context.Transportes.CountAsync();
+            if (string.IsNullOrEmpty(filter.Search))
+            {
+                var transportes = await _context.Transportes
+                                 .OrderBy(transportes => transportes.Apellido)
+                                 .Skip((filter.PageNumber - 1) * filter.PageSize)
+                                 .Take(filter.PageSize)
+                                 .ToListAsync();
+
+                transportesDto = mapper.Map<IList<TransporteDto>>(transportes);
+
+                totalRecords = await _context.Transportes.CountAsync();
+                
+            }
+            else
+            {
+                var transportes = await _context.Transportes
+                                 .Where(transportes => EF.Functions.Like(transportes.Apellido, $"{filter.Search}%" ))
+                                 .OrderBy(transportes => transportes.Apellido)
+                                 .Skip((filter.PageNumber - 1) * filter.PageSize)
+                                 .Take(filter.PageSize)
+                                 .ToListAsync();
+
+                transportesDto = mapper.Map<IList<TransporteDto>>(transportes);
+
+                totalRecords = await _context.Transportes.Where(transportes => EF.Functions.Like(transportes.Apellido, $"{filter.Search}%")).CountAsync();
+                
+            }
+
             var pagedResponse = PaginationHelper.CreatePagedReponse(transportesDto, filter, totalRecords, _uriService, route);
             return pagedResponse;
+
         }
 
         public async Task<Transporte> GetTransporte(int id)

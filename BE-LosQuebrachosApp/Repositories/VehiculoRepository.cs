@@ -36,15 +36,36 @@ namespace BE_LosQuebrachosApp.Repositories
         }
         public async Task<PagedResponse<IList<VehiculoDto>>> GetListVehiculos(PaginationFilter filter, string route)
         {
-            
-            var vehiculos = await _context.Vehiculos
+            IList<VehiculoDto> vehiculosDto = null;
+
+            int totalRecords = 0;
+
+            if (string.IsNullOrEmpty(filter.Search))
+            {
+                var vehiculos = await _context.Vehiculos
+                .OrderBy(vehiculos => vehiculos.Chasis)
                 .Include(vehiculos => vehiculos.Transporte)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
 
-            var vehiculosDto = mapper.Map<IList<VehiculoDto>>(vehiculos);
-            var totalRecords = await _context.Vehiculos.CountAsync();
+                vehiculosDto = mapper.Map<IList<VehiculoDto>>(vehiculos);
+                totalRecords = await _context.Vehiculos.CountAsync();
+            }
+            else
+            {
+                var vehiculos = await _context.Vehiculos
+                .Where(vehiculos => EF.Functions.Like(vehiculos.Chasis, $"{filter.Search}%"))
+                .OrderBy(vehiculos => vehiculos.Chasis)
+                .Include(vehiculos => vehiculos.Transporte)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+                vehiculosDto = mapper.Map<IList<VehiculoDto>>(vehiculos);
+                totalRecords = await _context.Vehiculos.Where(vehiculos => EF.Functions.Like(vehiculos.Chasis, $"{filter.Search}%")).CountAsync();
+            }
+                
             var pagedResponse = PaginationHelper.CreatePagedReponse(vehiculosDto, filter, totalRecords, _uriService, route);
             return pagedResponse;
         }

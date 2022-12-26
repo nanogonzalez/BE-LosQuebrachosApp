@@ -16,12 +16,25 @@ namespace BE_LosQuebrachosApp.Data
         public DbSet<OrdenDeCarga> OrdenesDeCargas { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
 
+        public DbSet<OrdenDeGasoil> OrdenesDeGasoil { get; set; } 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             MapVehiculo(modelBuilder);
             MapChofer(modelBuilder);
+            MapOrdenDeGasoil(modelBuilder);
         }
+        private static void MapOrdenDeGasoil(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OrdenDeGasoil>().HasKey(e => e.Id);
+            modelBuilder.Entity<OrdenDeGasoil>().Property(u => u.NumeroOrden);
+            modelBuilder.Entity<OrdenDeGasoil>().Property(u => u.Litros);
+            modelBuilder.Entity<OrdenDeGasoil>().Property(u => u.Fecha);
+            modelBuilder.Entity<OrdenDeGasoil>().Property(u => u.Estacion);
+            modelBuilder.Entity<OrdenDeGasoil>().HasOne(u =>  u.Transporte);
+        }
+
         private static void MapVehiculo(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Vehiculo>().HasKey(e => e.Id);

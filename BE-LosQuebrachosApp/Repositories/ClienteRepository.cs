@@ -31,14 +31,35 @@ namespace BE_LosQuebrachosApp.Repositories
 
         public async Task<PagedResponse<IList<ClienteDto>>> GetListCliente(PaginationFilter filter, string route)
         {
-            
-            var clientes = await _context.Clientes
+            IList<ClienteDto> clientesDto = null;
+
+            int totalRecords = 0;
+
+            if (string.IsNullOrEmpty(filter.Search))
+            {
+                var clientes = await _context.Clientes
+                .OrderBy(clientes => clientes.RazonSocial)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
 
-            var clientesDto = mapper.Map<IList<ClienteDto>>(clientes);
-            var totalRecords = await _context.Clientes.CountAsync();
+                clientesDto = mapper.Map<IList<ClienteDto>>(clientes);
+                totalRecords = await _context.Clientes.CountAsync();
+            }
+            else
+            {
+                var clientes = await _context.Clientes
+                .Where(clientes => EF.Functions.Like(clientes.RazonSocial, $"{filter.Search}%"))
+                .OrderBy(clientes => clientes.RazonSocial)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+                clientesDto = mapper.Map<IList<ClienteDto>>(clientes);
+                totalRecords = await _context.Clientes.Where(clientes => EF.Functions.Like(clientes.RazonSocial, $"{filter.Search}%")).CountAsync();
+            }    
+
+             
             var pagedResponse = PaginationHelper.CreatePagedReponse(clientesDto, filter, totalRecords, _uriService, route);
             return pagedResponse;
         }

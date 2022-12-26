@@ -38,15 +38,36 @@ namespace BE_LosQuebrachosApp.Repositories
 
         public async Task<PagedResponse<IList<ChoferDto>>> GetListChoferes(PaginationFilter filter, string route)
         {
-            
-            var choferes = await _context.Choferes
+            IList<ChoferDto> choferesDto = null;
+
+            int totalRecords = 0;
+
+            if (string.IsNullOrEmpty(filter.Search))
+            {
+                var choferes = await _context.Choferes
+                .OrderBy(choferes => choferes.Apellido)
                 .Include(choferes => choferes.Transporte)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
 
-            var choferesDto = mapper.Map<IList<ChoferDto>>(choferes);
-            var totalRecords = await _context.Choferes.CountAsync();
+                choferesDto = mapper.Map<IList<ChoferDto>>(choferes);
+                totalRecords = await _context.Choferes.CountAsync();
+            }
+            else
+            {
+                var choferes = await _context.Choferes
+               .Where(choferes => EF.Functions.Like(choferes.Apellido, $"{filter.Search}%"))
+               .OrderBy(choferes => choferes.Apellido)
+               .Include(choferes => choferes.Transporte)
+               .Skip((filter.PageNumber - 1) * filter.PageSize)
+               .Take(filter.PageSize)
+               .ToListAsync();
+
+                choferesDto = mapper.Map<IList<ChoferDto>>(choferes);
+                totalRecords = await _context.Choferes.Where(choferes => EF.Functions.Like(choferes.Apellido, $"{filter.Search}%")).CountAsync();
+            }
+
             var pagedResponse = PaginationHelper.CreatePagedReponse(choferesDto, filter, totalRecords, _uriService, route);
             return pagedResponse;
         }
