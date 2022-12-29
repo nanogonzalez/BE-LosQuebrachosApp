@@ -77,7 +77,7 @@ namespace BE_LosQuebrachosApp.Controllers
                 }
                 var ordenDeCargaDto = _mapper.Map<OrdenDeCargaDto>(ordenDeCarga);
 
-                return Ok(new Response<OrdenDeCargaDto>(ordenDeCargaDto));
+                return Ok(ordenDeCargaDto);
             }
             catch (Exception ex)
             {

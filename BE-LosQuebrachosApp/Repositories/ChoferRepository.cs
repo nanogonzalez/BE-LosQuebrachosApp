@@ -86,6 +86,7 @@ namespace BE_LosQuebrachosApp.Repositories
                 choferItem.Nombre = chofer.Nombre;
                 choferItem.Apellido = chofer.Apellido;
                 choferItem.Cuit = chofer.Cuit;
+                choferItem.Transporte = chofer.Transporte;
                 
                 await _context.SaveChangesAsync();
             }

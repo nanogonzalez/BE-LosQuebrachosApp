@@ -76,7 +76,7 @@ namespace BE_LosQuebrachosApp.Controllers
                 }
                 var clienteDto = _mapper.Map<ClienteDto>(cliente);
 
-                return Ok(new Response<ClienteDto>(clienteDto));
+                return Ok(clienteDto);
             }
             catch (Exception ex)
             {

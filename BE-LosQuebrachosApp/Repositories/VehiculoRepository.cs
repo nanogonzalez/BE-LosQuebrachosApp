@@ -83,6 +83,7 @@ namespace BE_LosQuebrachosApp.Repositories
                 vehiculoItem.Chasis = vehiculo.Chasis;
                 vehiculoItem.Tipo = vehiculo.Tipo;
                 vehiculoItem.CapacidadTN = vehiculo.CapacidadTN;
+                vehiculoItem.Transporte = vehiculo.Transporte;
 
                 await _context.SaveChangesAsync();
             }

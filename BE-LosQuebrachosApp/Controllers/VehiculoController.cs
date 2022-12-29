@@ -78,7 +78,7 @@ namespace BE_LosQuebrachosApp.Controllers
 
                 var vehiculoDto = _mapper.Map<VehiculoDto>(vehiculo);
 
-                return Ok( new Response<VehiculoDto>(vehiculoDto));
+                return Ok(vehiculoDto);
             }
             catch (Exception ex)
             {

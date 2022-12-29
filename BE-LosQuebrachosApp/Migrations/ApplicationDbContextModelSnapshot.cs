@@ -111,6 +111,9 @@ namespace BE_LosQuebrachosApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("ChoferId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CuitTransporte")
                         .HasColumnType("int");
 
@@ -130,9 +133,16 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.Property<int>("TransporteId")
                         .HasColumnType("int");
 
+                    b.Property<int>("VehiculoId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("ChoferId");
+
                     b.HasIndex("TransporteId");
+
+                    b.HasIndex("VehiculoId");
 
                     b.ToTable("OrdenesDeGasoil");
                 });
@@ -207,13 +217,29 @@ namespace BE_LosQuebrachosApp.Migrations
 
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.OrdenDeGasoil", b =>
                 {
+                    b.HasOne("BE_LosQuebrachosApp.Entities.Chofer", "Chofer")
+                        .WithMany()
+                        .HasForeignKey("ChoferId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("BE_LosQuebrachosApp.Entities.Transporte", "Transporte")
                         .WithMany()
                         .HasForeignKey("TransporteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("BE_LosQuebrachosApp.Entities.Vehiculo", "Vehiculo")
+                        .WithMany()
+                        .HasForeignKey("VehiculoId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Chofer");
+
                     b.Navigation("Transporte");
+
+                    b.Navigation("Vehiculo");
                 });
 
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Vehiculo", b =>

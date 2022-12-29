@@ -32,7 +32,15 @@ namespace BE_LosQuebrachosApp.Data
             modelBuilder.Entity<OrdenDeGasoil>().Property(u => u.Litros);
             modelBuilder.Entity<OrdenDeGasoil>().Property(u => u.Fecha);
             modelBuilder.Entity<OrdenDeGasoil>().Property(u => u.Estacion);
-            modelBuilder.Entity<OrdenDeGasoil>().HasOne(u =>  u.Transporte);
+            modelBuilder.Entity<OrdenDeGasoil>().HasOne(u =>  u.Transporte)
+                                                .WithMany()
+                                                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<OrdenDeGasoil>().HasOne(u => u.Chofer)
+                                                .WithMany()
+                                                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<OrdenDeGasoil>().HasOne(u => u.Vehiculo)
+                                                .WithMany()
+                                                .OnDelete(DeleteBehavior.NoAction);
         }
 
         private static void MapVehiculo(ModelBuilder modelBuilder)

@@ -76,7 +76,7 @@ namespace BE_LosQuebrachosApp.Controllers
                 }
                 var transporteDto = _mapper.Map<TransporteDto>(transporte);
 
-                return Ok(new Response<TransporteDto>(transporteDto));
+                return Ok(transporteDto);
             }
             catch (Exception ex)
             {

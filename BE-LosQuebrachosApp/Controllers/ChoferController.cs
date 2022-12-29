@@ -79,7 +79,7 @@ namespace BE_LosQuebrachosApp.Controllers
                 }
                 var choferDto = _mapper.Map<ChoferDto>(chofer);
 
-                return Ok( new Response<ChoferDto>(choferDto));
+                return Ok(choferDto);
             }
             catch (Exception ex)
             {
