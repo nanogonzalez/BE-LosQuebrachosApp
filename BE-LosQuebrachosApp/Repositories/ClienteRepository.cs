@@ -24,6 +24,7 @@ namespace BE_LosQuebrachosApp.Repositories
 
         public async Task<Cliente> AddCliente(Cliente cliente)
         {
+            
             _context.Clientes.Add(cliente);
             await _context.SaveChangesAsync();
             return cliente;
@@ -84,7 +85,6 @@ namespace BE_LosQuebrachosApp.Repositories
                 clienteItem.Id = cliente.Id;
                 clienteItem.RazonSocial = cliente.RazonSocial;
                 clienteItem.Cuit = cliente.Cuit;
-                clienteItem.DestinoCarga = cliente.DestinoCarga;
 
                 await _context.SaveChangesAsync();
             }

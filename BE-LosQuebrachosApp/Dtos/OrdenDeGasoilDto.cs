@@ -5,9 +5,9 @@ namespace BE_LosQuebrachosApp.Dtos
     public class OrdenDeGasoilDto
     {
         public int Id { get; set; }
-        public int NumeroOrden { get; set; }
+        public string? NumeroOrden { get; set; }
         public DateTime Fecha { get; set; }
-        public int CuitTransporte { get; set; }
+        public string CuitTransporte { get; set; }
         public Transporte Transporte { get; set; }
         public Chofer Chofer { get; set; }
         public Vehiculo Vehiculo { get; set; }

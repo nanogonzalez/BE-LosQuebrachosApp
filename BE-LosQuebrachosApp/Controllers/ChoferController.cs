@@ -42,6 +42,31 @@ namespace BE_LosQuebrachosApp.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet ("Transporte/{id}")]
+        public async Task<IActionResult> GetByTransporte(int id, [FromQuery] int pageNumber = 0, [FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] string? sortOrder = "asc")
+        {
+            try
+            {
+                var filter = new PaginationFilter(pageNumber, pageSize, search, sortOrder);
+
+                if (filter?.PageSize > 20)
+                {
+                    filter.PageSize = 20;
+                }
+
+                var route = Request.Path.Value;
+                var pagedResponse = await _choferRepository.GetChoferesByTransporte(filter, route, id);
+
+                return Ok(pagedResponse);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
+        }
+
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] int pageNumber = 0, [FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] string? sortOrder = "asc")
         {

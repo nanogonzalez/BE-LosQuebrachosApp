@@ -10,6 +10,7 @@ namespace BE_LosQuebrachosApp.Repositories
         Task DeleteVehiculo(Vehiculo vehiculo);
         Task<Vehiculo> AddVehiculo(Vehiculo vehiculo);
         Task<PagedResponse<IList<VehiculoDto>>> GetListVehiculos(PaginationFilter filter, string route);
+        Task<PagedResponse<IList<VehiculoDto>>> GetVehiculosByTransporte(PaginationFilter filter, string route, int idTransporte);
         Task<Vehiculo> GetVehiculo(int id);
         Task UpdateVehiculo(Vehiculo vehiculo);
     }    

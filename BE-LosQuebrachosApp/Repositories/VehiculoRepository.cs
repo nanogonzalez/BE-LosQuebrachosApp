@@ -34,6 +34,42 @@ namespace BE_LosQuebrachosApp.Repositories
             await _context.SaveChangesAsync();
             return vehiculo;
         }
+        public async Task<PagedResponse<IList<VehiculoDto>>> GetVehiculosByTransporte(PaginationFilter filter, string route, int idTransporte)
+        {
+            IList<VehiculoDto> vehiculosDto = null;
+
+            int totalRecords = 0;
+
+            if (string.IsNullOrEmpty(filter.Search))
+            {
+                var vehiculos = await _context.Vehiculos
+                .Where(vehiculos => vehiculos.Transporte.Id == idTransporte)
+                .OrderBy(vehiculos => vehiculos.Chasis)
+                .Include(vehiculos => vehiculos.Transporte)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+                vehiculosDto = mapper.Map<IList<VehiculoDto>>(vehiculos);
+                totalRecords = await _context.Vehiculos.CountAsync();
+            }
+            else
+            {
+                var vehiculos = await _context.Vehiculos
+                .Where(vehiculos => EF.Functions.Like(vehiculos.Chasis, $"{filter.Search}%") && vehiculos.Transporte.Id == idTransporte)
+                .OrderBy(vehiculos => vehiculos.Chasis)
+                .Include(vehiculos => vehiculos.Transporte)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+                vehiculosDto = mapper.Map<IList<VehiculoDto>>(vehiculos);
+                totalRecords = await _context.Vehiculos.Where(vehiculos => EF.Functions.Like(vehiculos.Chasis, $"{filter.Search}%") && vehiculos.Transporte.Id == idTransporte).CountAsync();
+            }
+
+            var pagedResponse = PaginationHelper.CreatePagedReponse(vehiculosDto, filter, totalRecords, _uriService, route);
+            return pagedResponse;
+        }
         public async Task<PagedResponse<IList<VehiculoDto>>> GetListVehiculos(PaginationFilter filter, string route)
         {
             IList<VehiculoDto> vehiculosDto = null;

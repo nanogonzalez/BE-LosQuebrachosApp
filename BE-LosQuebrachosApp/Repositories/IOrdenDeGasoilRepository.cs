@@ -12,5 +12,6 @@ namespace BE_LosQuebrachosApp.Repositories
         Task<PagedResponse<IList<OrdenDeGasoilDto>>> GetListOrdenDeGasoil(PaginationFilter filter, string route);
         Task<OrdenDeGasoil> GetOrdenDeGasoil(int id);
         Task UpdateOrdenDeGasoil(OrdenDeGasoil ordenDeGasoil);
+
     }
 }

@@ -36,6 +36,43 @@ namespace BE_LosQuebrachosApp.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<PagedResponse<IList<ChoferDto>>> GetChoferesByTransporte(PaginationFilter filter, string route, int idTransporte)
+        {
+            IList<ChoferDto> choferesDto = null;
+
+            int totalRecords = 0;
+
+            if (string.IsNullOrEmpty(filter.Search))
+            {
+                var choferes = await _context.Choferes
+                .Where(choferes => choferes.Transporte.Id == idTransporte) 
+                .OrderBy(choferes => choferes.Apellido)
+                .Include(choferes => choferes.Transporte)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+                choferesDto = mapper.Map<IList<ChoferDto>>(choferes);
+                totalRecords = await _context.Choferes.CountAsync();
+            }
+            else
+            {
+                var choferes = await _context.Choferes
+               .Where(choferes => EF.Functions.Like(choferes.Apellido, $"{filter.Search}%") && choferes.Transporte.Id == idTransporte)
+               .OrderBy(choferes => choferes.Apellido)
+               .Include(choferes => choferes.Transporte)
+               .Skip((filter.PageNumber - 1) * filter.PageSize)
+               .Take(filter.PageSize)
+               .ToListAsync();
+
+                choferesDto = mapper.Map<IList<ChoferDto>>(choferes);
+                totalRecords = await _context.Choferes.Where(choferes => EF.Functions.Like(choferes.Apellido, $"{filter.Search}%") && choferes.Transporte.Id == idTransporte).CountAsync();
+            }
+
+            var pagedResponse = PaginationHelper.CreatePagedReponse(choferesDto, filter, totalRecords, _uriService, route);
+            return pagedResponse;
+        }
+
         public async Task<PagedResponse<IList<ChoferDto>>> GetListChoferes(PaginationFilter filter, string route)
         {
             IList<ChoferDto> choferesDto = null;

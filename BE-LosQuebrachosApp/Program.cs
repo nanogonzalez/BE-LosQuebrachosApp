@@ -38,6 +38,8 @@ builder.Services.AddScoped<IVehiculoRepsitory, VehiculoRepository>();
 builder.Services.AddScoped<ITransporteRepository, TransporteRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IOrdenDeGasoilRepository, OrdenDeGasoilRepository>();
+builder.Services.AddScoped<IDestinoDeCargaRepository, DestinoDeCargaRepository>();
+builder.Services.AddScoped<IDestinoDeDescargaRepository, DestinoDeDescargaRepository>();
 
 var app = builder.Build();
 

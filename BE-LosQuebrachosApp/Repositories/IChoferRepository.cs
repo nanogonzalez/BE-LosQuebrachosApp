@@ -9,6 +9,7 @@ namespace BE_LosQuebrachosApp.Repositories
     {
         Task<Chofer> AddChofer(Chofer chofer);
         Task DeleteChofer(Chofer chofer);
+        Task<PagedResponse<IList<ChoferDto>>> GetChoferesByTransporte(PaginationFilter filter, string route, int idTransporte);
         Task<PagedResponse<IList<ChoferDto>>> GetListChoferes(PaginationFilter filter, string route);
         Task<Chofer> GetChofer(int id);
         Task UpdateChofer(Chofer chofer);

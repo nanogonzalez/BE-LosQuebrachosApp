@@ -1,5 +1,6 @@
 ﻿using BE_LosQuebrachosApp.Entities;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BE_LosQuebrachosApp.Data
 {
@@ -15,8 +16,9 @@ namespace BE_LosQuebrachosApp.Data
         public DbSet<Vehiculo> Vehiculos { get; set; }
         public DbSet<OrdenDeCarga> OrdenesDeCargas { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
-
         public DbSet<OrdenDeGasoil> OrdenesDeGasoil { get; set; } 
+        public DbSet<DestinoDeCarga> DestinosDeCarga { get; set; }
+        public DbSet<DestinoDeDescarga> DestinosDeDescarga { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +26,15 @@ namespace BE_LosQuebrachosApp.Data
             MapVehiculo(modelBuilder);
             MapChofer(modelBuilder);
             MapOrdenDeGasoil(modelBuilder);
+            MapDestinoDeCarga(modelBuilder);
+        }
+     
+        private static void MapDestinoDeCarga(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DestinoDeCarga>().HasKey(e => e.Id);
+            modelBuilder.Entity<DestinoDeCarga>().Property(u => u.Latitud);
+            modelBuilder.Entity<DestinoDeCarga>().Property(u => u.Longitud);
+            modelBuilder.Entity<DestinoDeCarga>().HasOne(u => u.Cliente);
         }
         private static void MapOrdenDeGasoil(ModelBuilder modelBuilder)
         {

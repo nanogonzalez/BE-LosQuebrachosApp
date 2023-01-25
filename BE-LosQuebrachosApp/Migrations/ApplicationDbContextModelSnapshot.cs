@@ -34,8 +34,9 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Cuit")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Cuit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -59,10 +60,7 @@ namespace BE_LosQuebrachosApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<long>("Cuit")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("DestinoCarga")
+                    b.Property<string>("Cuit")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -73,6 +71,53 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clientes");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.DestinoDeCarga", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Latitud")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitud")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.ToTable("DestinosDeCarga");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.DestinoDeDescarga", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<double>("Latitud")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitud")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DestinosDeDescarga");
                 });
 
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.OrdenDeCarga", b =>
@@ -114,9 +159,6 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.Property<int>("ChoferId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CuitTransporte")
-                        .HasColumnType("int");
-
                     b.Property<string>("Estacion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -127,8 +169,9 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.Property<int>("Litros")
                         .HasColumnType("int");
 
-                    b.Property<int>("NumeroOrden")
-                        .HasColumnType("int");
+                    b.Property<string>("NumeroOrden")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TransporteId")
                         .HasColumnType("int");
@@ -159,8 +202,9 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Cuit")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Cuit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -213,6 +257,17 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Transporte");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.DestinoDeCarga", b =>
+                {
+                    b.HasOne("BE_LosQuebrachosApp.Entities.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
                 });
 
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.OrdenDeGasoil", b =>

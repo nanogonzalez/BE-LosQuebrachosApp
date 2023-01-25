@@ -14,7 +14,7 @@ namespace BE_LosQuebrachosApp.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IOrdenDeGasoilRepository _ordenDeGasoilRepository;
-
+      
         public OrdenDeGasoilController(IMapper mapper, IOrdenDeGasoilRepository ordenDeGasoilRepository)
         {
             _mapper = mapper;
