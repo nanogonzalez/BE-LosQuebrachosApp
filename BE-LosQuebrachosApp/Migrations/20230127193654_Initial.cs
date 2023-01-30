@@ -31,27 +31,11 @@ namespace BE_LosQuebrachosApp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Latitud = table.Column<double>(type: "float", nullable: false),
                     Longitud = table.Column<double>(type: "float", nullable: false),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    NombreEstablecimiento = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DestinosDeDescarga", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrdenesDeCargas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DestinoCarga = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DestinoDescarga = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DiaHoraCarga = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TipoMercaderia = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrdenesDeCargas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,6 +61,7 @@ namespace BE_LosQuebrachosApp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Latitud = table.Column<double>(type: "float", nullable: false),
                     Longitud = table.Column<double>(type: "float", nullable: false),
+                    NombreEstablecimiento = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClienteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -136,6 +121,40 @@ namespace BE_LosQuebrachosApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrdenesDeCargas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NumeroOrden = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DestinoDeCargaId = table.Column<int>(type: "int", nullable: false),
+                    DestinoDeDescargaId = table.Column<int>(type: "int", nullable: false),
+                    DistanciaViaje = table.Column<int>(type: "int", nullable: false),
+                    DiaHoraCarga = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TipoMercaderia = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ClienteId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrdenesDeCargas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrdenesDeCargas_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OrdenesDeCargas_DestinosDeCarga_DestinoDeCargaId",
+                        column: x => x.DestinoDeCargaId,
+                        principalTable: "DestinosDeCarga",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OrdenesDeCargas_DestinosDeDescarga_DestinoDeDescargaId",
+                        column: x => x.DestinoDeDescargaId,
+                        principalTable: "DestinosDeDescarga",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrdenesDeGasoil",
                 columns: table => new
                 {
@@ -180,6 +199,21 @@ namespace BE_LosQuebrachosApp.Migrations
                 column: "ClienteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrdenesDeCargas_ClienteId",
+                table: "OrdenesDeCargas",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrdenesDeCargas_DestinoDeCargaId",
+                table: "OrdenesDeCargas",
+                column: "DestinoDeCargaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrdenesDeCargas_DestinoDeDescargaId",
+                table: "OrdenesDeCargas",
+                column: "DestinoDeDescargaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrdenesDeGasoil_ChoferId",
                 table: "OrdenesDeGasoil",
                 column: "ChoferId");
@@ -203,25 +237,25 @@ namespace BE_LosQuebrachosApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DestinosDeCarga");
-
-            migrationBuilder.DropTable(
-                name: "DestinosDeDescarga");
-
-            migrationBuilder.DropTable(
                 name: "OrdenesDeCargas");
 
             migrationBuilder.DropTable(
                 name: "OrdenesDeGasoil");
 
             migrationBuilder.DropTable(
-                name: "Clientes");
+                name: "DestinosDeCarga");
+
+            migrationBuilder.DropTable(
+                name: "DestinosDeDescarga");
 
             migrationBuilder.DropTable(
                 name: "Choferes");
 
             migrationBuilder.DropTable(
                 name: "Vehiculos");
+
+            migrationBuilder.DropTable(
+                name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "Transportes");

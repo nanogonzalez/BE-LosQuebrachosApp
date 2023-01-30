@@ -27,13 +27,33 @@ namespace BE_LosQuebrachosApp.Data
             MapChofer(modelBuilder);
             MapOrdenDeGasoil(modelBuilder);
             MapDestinoDeCarga(modelBuilder);
+            MapOrdenDeCarga(modelBuilder);
         }
      
+        private static void MapOrdenDeCarga(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OrdenDeCarga>().HasKey(e => e.Id);
+            modelBuilder.Entity<OrdenDeCarga>().Property(e => e.NumeroOrden);
+            modelBuilder.Entity<OrdenDeCarga>().Property(e => e.DiaHoraCarga);
+            modelBuilder.Entity<OrdenDeCarga>().Property(e => e.TipoMercaderia);
+            modelBuilder.Entity<OrdenDeCarga>().Property(e => e.DistanciaViaje);
+            modelBuilder.Entity<OrdenDeCarga>().HasOne(u => u.Cliente)
+                                               .WithMany()
+                                               .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<OrdenDeCarga>().HasOne(u => u.DestinoDeCarga)
+                                              .WithMany()
+                                              .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<OrdenDeCarga>().HasOne(u => u.DestinoDeDescarga)
+                                              .WithMany()
+                                              .OnDelete(DeleteBehavior.NoAction);
+        }
+
         private static void MapDestinoDeCarga(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DestinoDeCarga>().HasKey(e => e.Id);
             modelBuilder.Entity<DestinoDeCarga>().Property(u => u.Latitud);
             modelBuilder.Entity<DestinoDeCarga>().Property(u => u.Longitud);
+            modelBuilder.Entity<DestinoDeCarga>().Property(u => u.NombreEstablecimiento);
             modelBuilder.Entity<DestinoDeCarga>().HasOne(u => u.Cliente);
         }
         private static void MapOrdenDeGasoil(ModelBuilder modelBuilder)

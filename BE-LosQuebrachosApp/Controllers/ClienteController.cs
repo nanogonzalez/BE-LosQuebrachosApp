@@ -40,6 +40,7 @@ namespace BE_LosQuebrachosApp.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] int pageNumber = 0, [FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] string? sortOrder = "asc")
         {

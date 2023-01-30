@@ -53,6 +53,7 @@ namespace BE_LosQuebrachosApp.Repositories
                 .Include(ordenesDeGasoil => ordenesDeGasoil.Transporte)
                 .Include(ordenesDeGasoil => ordenesDeGasoil.Chofer)
                 .Include(ordenesDeGasoil => ordenesDeGasoil.Vehiculo)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
 
@@ -62,11 +63,12 @@ namespace BE_LosQuebrachosApp.Repositories
             else
             {
                 var ordenesDeGasoil = await _context.OrdenesDeGasoil
-                .Where(ordenesDeGasoil=>ordenesDeGasoil.NumeroOrden.Contains(filter.Search))
+                .Where(ordenesDeGasoil=> ordenesDeGasoil.NumeroOrden.Contains(filter.Search))
                 .OrderBy(ordenesDeGasoil => ordenesDeGasoil.NumeroOrden)
                 .Include(ordenesDeGasoil => ordenesDeGasoil.Transporte)
                 .Include(ordenesDeGasoil => ordenesDeGasoil.Chofer)
                 .Include(ordenesDeGasoil => ordenesDeGasoil.Vehiculo)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
 

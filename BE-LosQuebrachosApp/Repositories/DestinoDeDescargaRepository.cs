@@ -44,7 +44,7 @@ namespace BE_LosQuebrachosApp.Repositories
             if (string.IsNullOrEmpty(filter.Search))
             {
                 var destinosDeDescarga = await _context.DestinosDeDescarga
-                .OrderBy(destinosDeDescarga => destinosDeDescarga.Longitud)
+                .OrderBy(destinosDeDescarga => destinosDeDescarga.NombreEstablecimiento)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
@@ -55,14 +55,14 @@ namespace BE_LosQuebrachosApp.Repositories
             else
             {
                 var destinosDeDescarga = await _context.DestinosDeDescarga
-                .Where(destinosDeDescarga => EF.Functions.Like(destinosDeDescarga.Nombre, $"{filter.Search}%"))
+                .Where(destinosDeDescarga => EF.Functions.Like(destinosDeDescarga.NombreEstablecimiento, $"{filter.Search}%"))
                 .OrderBy(destinosDeDescarga => destinosDeDescarga.Longitud)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToListAsync();
 
                 destinoDeDescargaDto = mapper.Map<IList<DestinoDeDescargaDto>>(destinosDeDescarga);
-                totalRecords = await _context.DestinosDeDescarga.Where(destinosDeDescarga => EF.Functions.Like(destinosDeDescarga.Nombre, $"{filter.Search}%")).CountAsync();
+                totalRecords = await _context.DestinosDeDescarga.Where(destinosDeDescarga => EF.Functions.Like(destinosDeDescarga.NombreEstablecimiento, $"{filter.Search}%")).CountAsync();
             }
             var pagedResponse = PaginationHelper.CreatePagedReponse(destinoDeDescargaDto, filter, totalRecords, _uriService, route);
             return pagedResponse;
@@ -81,7 +81,7 @@ namespace BE_LosQuebrachosApp.Repositories
             {
                 destinoDeDescargaItem.Longitud = destinoDeDescarga.Longitud;
                 destinoDeDescargaItem.Latitud = destinoDeDescarga.Latitud;
-                destinoDeDescargaItem.Nombre = destinoDeDescarga.Nombre;
+                destinoDeDescargaItem.NombreEstablecimiento = destinoDeDescarga.NombreEstablecimiento;
 
                 await _context.SaveChangesAsync();
             }

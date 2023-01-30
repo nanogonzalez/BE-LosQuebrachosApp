@@ -90,6 +90,10 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.Property<double>("Longitud")
                         .HasColumnType("float");
 
+                    b.Property<string>("NombreEstablecimiento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
@@ -111,7 +115,7 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.Property<double>("Longitud")
                         .HasColumnType("float");
 
-                    b.Property<string>("Nombre")
+                    b.Property<string>("NombreEstablecimiento")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -128,22 +132,36 @@ namespace BE_LosQuebrachosApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("DestinoCarga")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("DestinoDescarga")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DestinoDeCargaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DestinoDeDescargaId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DiaHoraCarga")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("DistanciaViaje")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NumeroOrden")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TipoMercaderia")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("DestinoDeCargaId");
+
+                    b.HasIndex("DestinoDeDescargaId");
 
                     b.ToTable("OrdenesDeCargas");
                 });
@@ -268,6 +286,33 @@ namespace BE_LosQuebrachosApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Cliente");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.OrdenDeCarga", b =>
+                {
+                    b.HasOne("BE_LosQuebrachosApp.Entities.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BE_LosQuebrachosApp.Entities.DestinoDeCarga", "DestinoDeCarga")
+                        .WithMany()
+                        .HasForeignKey("DestinoDeCargaId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BE_LosQuebrachosApp.Entities.DestinoDeDescarga", "DestinoDeDescarga")
+                        .WithMany()
+                        .HasForeignKey("DestinoDeDescargaId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("DestinoDeCarga");
+
+                    b.Navigation("DestinoDeDescarga");
                 });
 
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.OrdenDeGasoil", b =>

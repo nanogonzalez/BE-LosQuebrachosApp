@@ -41,6 +41,30 @@ namespace BE_LosQuebrachosApp.Controllers
             }
         }
 
+        [HttpGet("Cliente/{id}")]
+        public async Task<IActionResult> Get(int id, [FromQuery] int pageNumber = 0, [FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] string? sortOrder = "asc")
+        {
+            try
+            {
+                var filter = new PaginationFilter(pageNumber, pageSize, search, sortOrder);
+
+                if (filter?.PageSize > 20)
+                {
+                    filter.PageSize = 20;
+                }
+
+                var route = Request.Path.Value;
+                var pagedResponse = await _destinoDeCargaRepository.GetDestinoDeCargaByCliente(filter, route, id);
+
+                return Ok(pagedResponse);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] int pageNumber = 0, [FromQuery] int pageSize = 10, [FromQuery] string? search = null, [FromQuery] string? sortOrder = "asc")
         {

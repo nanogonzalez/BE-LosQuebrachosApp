@@ -24,6 +24,10 @@ namespace BE_LosQuebrachosApp.Repositories
 
         public async Task<OrdenDeCarga> AddOrdenDeCarga(OrdenDeCarga ordenDeCarga)
         {
+            ordenDeCarga.NumeroOrden = await GenerarNumeroOrden();
+            ordenDeCarga.DestinoDeCarga = await _context.DestinosDeCarga.FirstOrDefaultAsync(x => x.Id == ordenDeCarga.DestinoDeCarga.Id);
+            ordenDeCarga.DestinoDeDescarga = await _context.DestinosDeDescarga.FirstOrDefaultAsync(x => x.Id == ordenDeCarga.DestinoDeDescarga.Id);
+            ordenDeCarga.Cliente = await _context.Clientes.FirstOrDefaultAsync(x => x.Id == ordenDeCarga.Cliente.Id);
             _context.OrdenesDeCargas.Add(ordenDeCarga);
             await _context.SaveChangesAsync();
             return ordenDeCarga;
@@ -38,7 +42,10 @@ namespace BE_LosQuebrachosApp.Repositories
             if (string.IsNullOrEmpty(filter.Search)){
 
                 var ordenesDeCargas = await _context.OrdenesDeCargas
-                  .OrderBy(ordenesDeCargas => ordenesDeCargas.DestinoCarga)
+                  .OrderBy(ordenesDeCargas => ordenesDeCargas.NumeroOrden)
+                  .Include(ordenesDeCargas => ordenesDeCargas.DestinoDeCarga)
+                  .Include(ordenesDeCargas => ordenesDeCargas.DestinoDeDescarga)
+                  .Include(ordenesDeCargas => ordenesDeCargas.Cliente)
                   .Skip((filter.PageNumber - 1) * filter.PageSize)
                   .Take(filter.PageSize)
                   .ToListAsync();
@@ -49,14 +56,17 @@ namespace BE_LosQuebrachosApp.Repositories
             else
             {
                 var ordenesDeCargas = await _context.OrdenesDeCargas
-                  .Where(ordenesDeCargas => EF.Functions.Like(ordenesDeCargas.DestinoCarga, $"{filter.Search}%"))
-                  .OrderBy(ordenesDeCargas => ordenesDeCargas.DestinoCarga)
+                  .Where(ordenesDeCargas => ordenesDeCargas.NumeroOrden.Contains(filter.Search))
+                  .OrderBy(ordenesDeCargas => ordenesDeCargas.Cliente.RazonSocial)
+                  .Include(ordenesDeCargas => ordenesDeCargas.DestinoDeCarga)
+                  .Include(ordenesDeCargas => ordenesDeCargas.DestinoDeDescarga)
+                  .Include(ordenesDeCargas => ordenesDeCargas.Cliente)
                   .Skip((filter.PageNumber - 1) * filter.PageSize)
                   .Take(filter.PageSize)
                   .ToListAsync();
 
                 ordenesDeCargasDto = mapper.Map<IList<OrdenDeCargaDto>>(ordenesDeCargas);
-                totalRecords = await _context.OrdenesDeCargas.Where(ordenesDeCargas => EF.Functions.Like(ordenesDeCargas.DestinoCarga, $"{filter.Search}%")).CountAsync();
+                totalRecords = await _context.OrdenesDeCargas.Where(ordenesDeCargas => ordenesDeCargas.NumeroOrden.Contains(filter.Search)).CountAsync();
             }
                 
             var pagedResponse = PaginationHelper.CreatePagedReponse(ordenesDeCargasDto, filter, totalRecords, _uriService, route);
@@ -65,7 +75,11 @@ namespace BE_LosQuebrachosApp.Repositories
 
         public async Task<OrdenDeCarga> GetOrdenDeCarga(int id)
         {
-            return await _context.OrdenesDeCargas.Where(a => a.Id == id).FirstOrDefaultAsync();
+            return await _context.OrdenesDeCargas
+                .Include(ordenesDeCargas => ordenesDeCargas.DestinoDeCarga)
+                .Include(ordenesDeCargas => ordenesDeCargas.DestinoDeDescarga)
+                .Include(ordenesDeCargas => ordenesDeCargas.Cliente)
+                .Where(a => a.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task DeleteOrdenDeCarga(OrdenDeCarga ordenDeCarga)
@@ -80,13 +94,23 @@ namespace BE_LosQuebrachosApp.Repositories
 
             if (ordenDeCargaItem != null)
             {
-                ordenDeCargaItem.DestinoCarga = ordenDeCarga.DestinoCarga;
-                ordenDeCargaItem.DestinoDescarga = ordenDeCarga.DestinoDescarga;
+                ordenDeCargaItem.NumeroOrden = ordenDeCarga.NumeroOrden;
+                ordenDeCargaItem.DestinoDeCarga = ordenDeCarga.DestinoDeCarga;
+                ordenDeCargaItem.DestinoDeDescarga = ordenDeCarga.DestinoDeDescarga;
+                ordenDeCargaItem.DistanciaViaje = ordenDeCarga.DistanciaViaje;
                 ordenDeCargaItem.DiaHoraCarga = ordenDeCarga.DiaHoraCarga; 
                 ordenDeCargaItem.TipoMercaderia = ordenDeCarga.TipoMercaderia;
+                ordenDeCargaItem.Cliente = ordenDeCarga.Cliente;    
 
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<string> GenerarNumeroOrden()
+        {
+            var ultimaOrden = _context.OrdenesDeCargas.OrderByDescending(o => o.NumeroOrden).FirstOrDefault();
+            var ultimoNumero = ultimaOrden != null ? int.Parse(ultimaOrden.NumeroOrden.Substring(9)) : 000000;
+            return "OC-001-" + (ultimoNumero + 1).ToString("D6");
         }
     }
 }

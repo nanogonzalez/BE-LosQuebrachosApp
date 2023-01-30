@@ -12,5 +12,6 @@ namespace BE_LosQuebrachosApp.Repositories
         Task<DestinoDeCarga> GetDestinoDeCarga(int id);
         Task DeleteDestinoDeCarga(DestinoDeCarga destinoDeCarga);
         Task UpdateDestinoDeCarga(DestinoDeCarga destinoDeCarga);
+        Task<PagedResponse<IList<DestinoDeCargaDto>>> GetDestinoDeCargaByCliente(PaginationFilter filter, string route, int idCliente);
     }
 }
