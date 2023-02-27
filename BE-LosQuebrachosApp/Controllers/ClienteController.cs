@@ -4,6 +4,7 @@ using BE_LosQuebrachosApp.Entities;
 using BE_LosQuebrachosApp.Filter;
 using BE_LosQuebrachosApp.Repositories;
 using BE_LosQuebrachosApp.Wrappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

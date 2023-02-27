@@ -19,6 +19,7 @@ namespace BE_LosQuebrachosApp.Data
         public DbSet<OrdenDeGasoil> OrdenesDeGasoil { get; set; } 
         public DbSet<DestinoDeCarga> DestinosDeCarga { get; set; }
         public DbSet<DestinoDeDescarga> DestinosDeDescarga { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

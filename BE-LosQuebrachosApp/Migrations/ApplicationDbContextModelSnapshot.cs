@@ -31,18 +31,15 @@ namespace BE_LosQuebrachosApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Apellido")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cuit")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TransporteId")
+                    b.Property<int?>("TransporteId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -61,11 +58,9 @@ namespace BE_LosQuebrachosApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Cuit")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RazonSocial")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -81,7 +76,7 @@ namespace BE_LosQuebrachosApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ClienteId")
+                    b.Property<int?>("ClienteId")
                         .HasColumnType("int");
 
                     b.Property<double>("Latitud")
@@ -91,7 +86,6 @@ namespace BE_LosQuebrachosApp.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("NombreEstablecimiento")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -116,7 +110,6 @@ namespace BE_LosQuebrachosApp.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("NombreEstablecimiento")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -132,13 +125,13 @@ namespace BE_LosQuebrachosApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ClienteId")
+                    b.Property<int?>("ClienteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DestinoDeCargaId")
+                    b.Property<int?>("DestinoDeCargaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DestinoDeDescargaId")
+                    b.Property<int?>("DestinoDeDescargaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DiaHoraCarga")
@@ -148,11 +141,9 @@ namespace BE_LosQuebrachosApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NumeroOrden")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TipoMercaderia")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -174,11 +165,10 @@ namespace BE_LosQuebrachosApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ChoferId")
+                    b.Property<int?>("ChoferId")
                         .HasColumnType("int");
 
                     b.Property<string>("Estacion")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Fecha")
@@ -188,13 +178,12 @@ namespace BE_LosQuebrachosApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NumeroOrden")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TransporteId")
+                    b.Property<int?>("TransporteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("VehiculoId")
+                    b.Property<int?>("VehiculoId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -217,20 +206,63 @@ namespace BE_LosQuebrachosApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Apellido")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cuit")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Transportes");
+                });
+
+            modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Apellido")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreUsuario")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ResetPasswordExpiry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ResetPasswordToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("BE_LosQuebrachosApp.Entities.Vehiculo", b =>
@@ -242,21 +274,18 @@ namespace BE_LosQuebrachosApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Acoplado")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CapacidadTN")
                         .HasColumnType("int");
 
                     b.Property<string>("Chasis")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tipo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TransporteId")
+                    b.Property<int?>("TransporteId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -270,9 +299,7 @@ namespace BE_LosQuebrachosApp.Migrations
                 {
                     b.HasOne("BE_LosQuebrachosApp.Entities.Transporte", "Transporte")
                         .WithMany()
-                        .HasForeignKey("TransporteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TransporteId");
 
                     b.Navigation("Transporte");
                 });
@@ -281,9 +308,7 @@ namespace BE_LosQuebrachosApp.Migrations
                 {
                     b.HasOne("BE_LosQuebrachosApp.Entities.Cliente", "Cliente")
                         .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClienteId");
 
                     b.Navigation("Cliente");
                 });
@@ -293,20 +318,17 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.HasOne("BE_LosQuebrachosApp.Entities.Cliente", "Cliente")
                         .WithMany()
                         .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BE_LosQuebrachosApp.Entities.DestinoDeCarga", "DestinoDeCarga")
                         .WithMany()
                         .HasForeignKey("DestinoDeCargaId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BE_LosQuebrachosApp.Entities.DestinoDeDescarga", "DestinoDeDescarga")
                         .WithMany()
                         .HasForeignKey("DestinoDeDescargaId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Cliente");
 
@@ -320,20 +342,17 @@ namespace BE_LosQuebrachosApp.Migrations
                     b.HasOne("BE_LosQuebrachosApp.Entities.Chofer", "Chofer")
                         .WithMany()
                         .HasForeignKey("ChoferId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BE_LosQuebrachosApp.Entities.Transporte", "Transporte")
                         .WithMany()
                         .HasForeignKey("TransporteId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BE_LosQuebrachosApp.Entities.Vehiculo", "Vehiculo")
                         .WithMany()
                         .HasForeignKey("VehiculoId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Chofer");
 
@@ -346,9 +365,7 @@ namespace BE_LosQuebrachosApp.Migrations
                 {
                     b.HasOne("BE_LosQuebrachosApp.Entities.Transporte", "Transporte")
                         .WithMany()
-                        .HasForeignKey("TransporteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TransporteId");
 
                     b.Navigation("Transporte");
                 });
